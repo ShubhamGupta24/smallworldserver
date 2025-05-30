@@ -1,36 +1,23 @@
 const express = require("express");
-const dotenv = require("dotenv");
+const dotenv = require("dotenv/config.js");
 const { createClient } = require("@supabase/supabase-js");
-const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
-const path = require("path");
-const fs = require("fs");
+const { signUpController } = require("./controllers/user.controller.js")
+
 
 dotenv.config();
 const app = express();
 const PORT = 3000;
 
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
-app.use(express.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use( express.json() );
+app.use( express.urlencoded({ extended: true }) );
 app.use(cookieParser());
 app.use(express.static("public")); 
 
 
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
-});
-
-
-app.post("/signup", async (req, res) => {
-  const { email, password } = req.body;
-  console.log(email, password);
-  const { user, error } = await supabase.auth.signUp({ email, password });
-//   console.log("User:", user);
-  console.log("Error:", error);
-
-  if (error) return res.redirect(`/error.html?msg=${encodeURIComponent(error.message)}`);
-  console.log("User signed up:", user);
+app.post("/signup", async (req, res,) => {
+  signUpController( req,res,supabase);
 });
 
 
