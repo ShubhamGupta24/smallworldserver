@@ -76,4 +76,8 @@ app.get("/logout", (req, res) => {
   res.redirect("/");
 });
 
+app.use((req,res,next) => {
+  res.status(404).send("The page you are trying to reach is `Not Found`");
+})
+
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
